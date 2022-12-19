@@ -7,9 +7,15 @@ build/
 # If you're building an application, you may want to check-in your pubspec.lock
 pubspec.lock
 
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
 # Directory created by dartdoc
 # If you don't generate documentation locally you can remove this line.
-doc/api/
+**/doc/api/
 
 # Avoid committing generated Javascript files:
 *.dart.js
@@ -19,3 +25,12 @@ doc/api/
 *.js_
 *.js.deps
 *.js.map
+
+*.freezed.dart
+*.mocks.dart
+*.mock_setting.dart
+
+.fvm/flutter_sdk
+
+.melos_tool/
+node_modules

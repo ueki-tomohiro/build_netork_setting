@@ -1,0 +1,23 @@
+{
+  "name": "build_network_setting",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "gen:api": "run-p --print-label --print-name generate-api:*",
+    "generate-api:todo": "SERVICE_NAME=external API_NAME=todo yarn generate-openapi",
+    "generate-openapi": "openapi-generator-cli generate -t ./document/api/templates -g dart -i ./document/api/services/$SERVICE_NAME/$API_NAME/openapi.yaml -o ./packages/api/$SERVICE_NAME/$API_NAME --global-property apis,apiDocs=false,apiTests=false,models,modelDocs=false,modelTests=false,supportingFiles --additional-properties=pubLibrary=$SERVICE_NAME.$API_NAME.api,pubName=${SERVICE_NAME}_${API_NAME}",
+    "mock:todo": "SERVICE_NAME=external API_NAME=todo PORT=4010 yarn mock-openapi",
+    "mock-openapi": "prism mock --host $(ifconfig -l | xargs -n1 ipconfig getifaddr | sed -n -e 1p) --port=${PORT} ./document/api/services/${SERVICE_NAME}/${API_NAME}/openapi.yaml",
+    "validate:api": "run-p --print-label --print-name validate-api:*",
+    "validate-api:todo": "SERVICE_NAME=external API_NAME=todo yarn validate-openapi",
+    "validate-openapi": "swagger-cli validate ./document/api/services/$SERVICE_NAME/$API_NAME/openapi.yaml",
+    "start-mock": "run-p --print-label --print-name mock:*"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@openapitools/openapi-generator-cli": "^2",
+    "@stoplight/prism-cli": "^4.10.5",
+    "npm-run-all": "^4",
+    "swagger-cli": "^4.0.4"
+  }
+}

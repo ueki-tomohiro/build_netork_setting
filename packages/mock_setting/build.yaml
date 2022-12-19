@@ -1,0 +1,7 @@
+builders:
+  mock_setting:
+    import: "package:mock_setting/mock_setting.dart"
+    builder_factories: ["mockSettingBuilder"]
+    build_extensions: { ".dart": [".mock_setting.dart"] }
+    auto_apply: dependents
+    build_to: source

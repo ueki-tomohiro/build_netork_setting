@@ -1,0 +1,19 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "mock",
+            "program": "${workspaceFolder}/packages/app/lib/main_mock.dart",
+            "request": "launch",
+            "type": "dart",
+            "args": []
+        },
+        {
+            "name": "release",
+            "program": "${workspaceFolder}/packages/app/lib/main.dart",
+            "request": "launch",
+            "type": "dart",
+            "args": []
+        },
+    ]
+}
