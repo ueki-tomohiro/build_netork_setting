@@ -2,16 +2,21 @@ import 'package:app/repository/todo_repository.dart';
 import 'package:app/state/todo_state.dart';
 import 'package:riverpod/riverpod.dart';
 
-class TodoEditController extends StateNotifier<AsyncValue<TodoState>> {
-  final ITodoRepository repository;
-  final int? todoId;
-  TodoEditController(this.repository, this.todoId)
-      : super(AsyncData(TodoState.undefined()));
+class TodoEditController
+    extends AutoDisposeFamilyAsyncNotifier<TodoState, int?> {
+  late final int? _todoId;
+
+  @override
+  TodoState build(int? todoId) {
+    _todoId = todoId;
+    return TodoState.undefined();
+  }
 
   Future<void> registerTodo(String description, DateTime endDate) async {
     state = const AsyncLoading();
 
     state = await AsyncValue.guard<TodoState>(() async {
+      final ITodoRepository repository = ref.read(todoRepositoryProvider);
       final todo = await repository.registerTodo(description, endDate);
       if (todo != null) {
         return TodoState.updated(todo: todo);
@@ -23,12 +28,13 @@ class TodoEditController extends StateNotifier<AsyncValue<TodoState>> {
 
   Future<void> updateTodo(
       String description, DateTime endDate, bool completed) async {
-    final todoId = this.todoId;
+    final todoId = _todoId;
     if (todoId == null) return;
 
     state = const AsyncLoading();
 
     state = await AsyncValue.guard<TodoState>(() async {
+      final ITodoRepository repository = ref.read(todoRepositoryProvider);
       final todo =
           await repository.updateTodo(todoId, description, endDate, completed);
       if (todo != null) {
@@ -40,24 +46,26 @@ class TodoEditController extends StateNotifier<AsyncValue<TodoState>> {
   }
 
   Future<void> deleteTodo() async {
-    final todoId = this.todoId;
+    final todoId = _todoId;
     if (todoId == null) return;
 
     state = const AsyncLoading();
 
     state = await AsyncValue.guard<TodoState>(() async {
+      final ITodoRepository repository = ref.read(todoRepositoryProvider);
       await repository.deleteTodo(todoId);
       return TodoState.deleted();
     });
   }
 
   Future<void> getTodo() async {
-    final todoId = this.todoId;
+    final todoId = _todoId;
     if (todoId == null) return;
 
     state = const AsyncLoading();
 
     state = await AsyncValue.guard<TodoState>(() async {
+      final ITodoRepository repository = ref.read(todoRepositoryProvider);
       final todo = await repository.getTodo(todoId);
       if (todo != null) {
         return TodoState.loaded(todo: todo);
@@ -68,9 +76,5 @@ class TodoEditController extends StateNotifier<AsyncValue<TodoState>> {
   }
 }
 
-final todoEditControllerProvider = StateNotifierProvider.family
-    .autoDispose<TodoEditController, AsyncValue<TodoState>, int?>(
-        (ref, todoId) {
-  final repository = ref.read(todoRepositoryProvider);
-  return TodoEditController(repository, todoId);
-});
+final todoEditControllerProvider = AsyncNotifierProvider.autoDispose
+    .family<TodoEditController, TodoState, int?>(TodoEditController.new);

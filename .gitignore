@@ -29,6 +29,7 @@ pubspec.lock
 *.freezed.dart
 *.mocks.dart
 *.mock_setting.dart
+*.g.dart
 
 .fvm/flutter_sdk
 

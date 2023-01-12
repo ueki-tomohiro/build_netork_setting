@@ -1,11 +1,13 @@
 import 'package:app/repository/todo_repository.dart';
 import 'package:app/state/todo_state.dart';
 import 'package:external_todo/api.dart';
-import 'package:riverpod/riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final todoControllerProvider =
-    FutureProvider.family.autoDispose<TodoState, int>((ref, todoId) async {
-  final repository = ref.watch(todoRepositoryProvider);
+part 'todo_controller.g.dart';
+
+@riverpod
+Future<TodoState> todoController(TodoControllerRef ref, int todoId) async {
+  final ITodoRepository repository = ref.read(todoRepositoryProvider);
   final todo = await repository.getTodo(todoId);
 
   try {
@@ -17,10 +19,10 @@ final todoControllerProvider =
   } catch (error, trace) {
     return TodoState.failure(error: error, trace: trace);
   }
-});
+}
 
-final todoListControllerProvider =
-    FutureProvider.autoDispose<List<Todo>>((ref) async {
-  final repository = ref.watch(todoRepositoryProvider);
+@riverpod
+Future<List<Todo>> todoListController(TodoListControllerRef ref) async {
+  final ITodoRepository repository = ref.read(todoRepositoryProvider);
   return await repository.getTodos() ?? [];
-});
+}
