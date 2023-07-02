@@ -8,16 +8,35 @@
     "generate-openapi": "openapi-generator-cli generate -t ./document/api/templates -g dart -i ./document/api/services/$SERVICE_NAME/$API_NAME/openapi.yaml -o ./packages/api/$SERVICE_NAME/$API_NAME --global-property apis,apiDocs=false,apiTests=false,models,modelDocs=false,modelTests=false,supportingFiles --additional-properties=pubLibrary=$SERVICE_NAME.$API_NAME.api,pubName=${SERVICE_NAME}_${API_NAME}",
     "mock:todo": "SERVICE_NAME=external API_NAME=todo PORT=4010 yarn mock-openapi",
     "mock-openapi": "prism mock --host $(ifconfig -l | xargs -n1 ipconfig getifaddr | sed -n -e 1p) --port=${PORT} ./document/api/services/${SERVICE_NAME}/${API_NAME}/openapi.yaml",
+    "new-version": "yarn ts-node scripts/bump-version.ts",
     "validate:api": "run-p --print-label --print-name validate-api:*",
     "validate-api:todo": "SERVICE_NAME=external API_NAME=todo yarn validate-openapi",
     "validate-openapi": "swagger-cli validate ./document/api/services/$SERVICE_NAME/$API_NAME/openapi.yaml",
     "start-mock": "run-p --print-label --print-name mock:*"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@inquirer/prompts": "^2.2.0",
+    "@types/lodash": "^4",
+    "@types/semver": "^7.5.0",
+    "@types/yargs": "17.0.24",
+    "lodash": "^4",
+    "semver": "^7.5.3",
+    "yargs": "^17.7.2"
+  },
   "devDependencies": {
     "@openapitools/openapi-generator-cli": "^2",
     "@stoplight/prism-cli": "^4.10.5",
     "npm-run-all": "^4",
-    "swagger-cli": "^4.0.4"
+    "swagger-cli": "^4.0.4",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.6"
+  },
+  "engines": {
+    "node": "^20",
+    "yarn": ">=1"
+  },
+  "volta": {
+    "node": "20.0.0",
+    "yarn": "1.22.19"
   }
 }
