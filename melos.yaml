@@ -31,7 +31,6 @@ scripts:
     select-package:
       scope: 'app'
 
-
   test:unit:
     exec: fvm flutter test
     select-package:
